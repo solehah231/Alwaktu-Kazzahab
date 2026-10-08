@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ms" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengembaraan RPG Al-Waqtu Kazzahab - Bahasa Arab Tahun 3</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Poppins & Amiri for Arabic text -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .arabic-text {
+            font-family: 'Amiri', serif;
+        }
+        @keyframes pulse-slow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        .animate-pulse-slow {
+            animation: pulse-slow 3s infinite ease-in-out;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .animate-float {
+            animation: float 2.5s infinite ease-in-out;
+        }
+        /* Custom scrollbar for immersive look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e1b4b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4f46e5;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 text-white min-h-full flex flex-col items-center justify-center p-4">
+
+    <div id="app" class="w-full max-w-3xl bg-slate-900/90 backdrop-blur-md rounded-3xl shadow-2xl border-4 border-amber-500/50 overflow-hidden flex flex-col relative min-h-[620px]">
+
+        <!-- HEADER / TOP BAR -->
+        <header class="bg-indigo-950/80 border-b border-indigo-800/60 p-4 flex items-center justify-between shadow-lg">
+            <div class="flex items-center space-x-3">
+                <span class="text-3xl">⚔️</span>
+                <div>
+                    <h1 class="text-lg md:text-xl font-extrabold text-amber-400 tracking-wide">الْوَقْتُ كَالثَّهَبِ (Waktu Itu Emas)</h1>
+                    <p class="text-xs text-indigo-300">Bahasa Arab Tahun 3 RPG Adventure</p>
+                </div>
+            </div>
+            <div id="stats-container" class="hidden flex items-center space-x-4 bg-slate-900/80 px-3 py-1.5 rounded-2xl border border-indigo-700/50">
+                <div class="text-center">
+                    <span class="text-[10px] uppercase font-bold text-red-400 block">HP</span>
+                    <span id="hp-text" class="text-sm font-extrabold text-red-300">100/100</span>
+                </div>
+                <div class="h-6 w-px bg-indigo-800"></div>
+                <div class="text-center">
+                    <span class="text-[10px] uppercase font-bold text-amber-400 block">XP</span>
+                    <span id="xp-text" class="text-sm font-extrabold text-amber-300">0</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="flex-1 flex flex-col justify-center p-6 relative">
+
+            <div id="screen-start" class="flex flex-col items-center text-center space-y-6">
+                <div class="animate-float">
+                    <span class="text-7xl">🛡️⏳</span>
+                </div>
+                <div class="space-y-2">
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-amber-300">Pengembaraan Wira Waktu</h2>
+                    <p class="text-sm text-indigo-200 max-w-md mx-auto">
+                        Selesaikan 3 stesen cabaran Bahasa Arab berkaitan waktu makan dan kosa kata harian. Kumpul XP dan jaga HP wira anda!
+                    </p>
+                </div>
+
+                <div class="w-full max-w-sm space-y-4 bg-indigo-900/40 p-5 rounded-2xl border border-indigo-700/40">
+                    <div>
+                        <label for="hero-name" class="block text-xs font-semibold text-amber-200 mb-1 text-left">NAMA WIRA:</label>
+                        <input type="text" id="hero-name" placeholder="Masukkan nama wira..." 
+                            class="w-full px-4 py-3 bg-slate-950/80 border border-indigo-600 rounded-xl text-white placeholder-indigo-400 focus:outline-none focus:ring-2 focus:ring-amber-400 text-center font-semibold text-lg">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-amber-200 mb-2 text-left">PILIH AVATAR WIRA:</label>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button onclick="selectAvatar('🧙‍♂️', 'Wira Arif')" class="avatar-btn p-3 bg-indigo-950 border-2 border-indigo-600 rounded-xl flex flex-col items-center hover:border-amber-400 transition cursor-pointer">
+                                <span class="text-3xl">🧙‍♂️</span>
+                                <span class="text-xs mt-1 font-bold text-indigo-200">Arif</span>
+                            </button>
+                            <button onclick="selectAvatar('🧝‍♀️', 'Wira Salwa')" class="avatar-btn p-3 bg-indigo-950 border-2 border-amber-400 rounded-xl flex flex-col items-center hover:border-amber-400 transition cursor-pointer ring-2 ring-amber-400">
+                                <span class="text-3xl">🧝‍♀️</span>
+                                <span class="text-xs mt-1 font-bold text-indigo-200">Salwa</span>
+                            </button>
+                            <button onclick="selectAvatar('🦸‍♂️', 'Wira Tariq')" class="avatar-btn p-3 bg-indigo-950 border-2 border-indigo-600 rounded-xl flex flex-col items-center hover:border-amber-400 transition cursor-pointer">
+                                <span class="text-3xl">🦸‍♂️</span>
+                                <span class="text-xs mt-1 font-bold text-indigo-200">Tariq</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button onclick="startGame()" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-extrabold rounded-xl shadow-lg transform active:scale-95 transition text-base">
+                        MULA PENGEMBARAAN 🚀
+                    </button>
+                </div>
+            </div>
+
+            <div id="screen-game" class="hidden flex flex-col h-full space-y-4">
+                <!-- Hero status bar inside game -->
+                <div class="flex items-center justify-between bg-indigo-950/60 p-3 rounded-2xl border border-indigo-800/50">
+                    <div class="flex items-center space-x-3">
+                        <div id="current-avatar" class="text-3xl bg-indigo-900/80 p-2 rounded-xl border border-indigo-700">🧝‍♀️</div>
+                        <div>
+                            <h3 id="display-hero-name" class="font-bold text-sm text-amber-300">Wira Salwa</h3>
+                            <span id="station-badge-title" class="text-xs px-2 py-0.5 bg-indigo-800 text-indigo-200 rounded-full font-medium">Stesen 1: Kosa Kata</span>
+                        </div>
+                    </div>
+                    <!-- HP & XP Progress bars -->
+                    <div class="flex flex-col space-y-1 w-36 md:w-48">
+                        <div class="flex justify-between text-[10px] font-bold">
+                            <span class="text-red-400">HP</span>
+                            <span id="hp-bar-num" class="text-red-300">100/100</span>
+                        </div>
+                        <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-red-900/50">
+                            <div id="hp-fill" class="bg-gradient-to-r from-red-600 to-red-400 h-full w-full transition-all duration-300"></div>
+                        </div>
+                        <div class="flex justify-between text-[10px] font-bold mt-0.5">
+                            <span class="text-amber-400">XP</span>
+                            <span id="xp-bar-num" class="text-amber-300">0</span>
+                        </div>
+                        <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-amber-900/50">
+                            <div id="xp-fill" class="bg-gradient-to-r from-amber-600 to-amber-400 h-full w-0 transition-all duration-300"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question / Challenge Box -->
+                <div class="flex-1 bg-indigo-950/40 border border-indigo-800/50 rounded-2xl p-5 flex flex-col justify-between shadow-inner">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span id="question-counter" class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Soalan 1 / 3</span>
+                            <span id="station-indicator" class="text-xs font-bold px-2.5 py-1 bg-amber-500/20 text-amber-300 rounded-lg border border-amber-500/30">Stesen 1</span>
+                        </div>
+                        <div class="bg-slate-950/70 p-6 rounded-xl border border-indigo-900 text-center shadow-lg my-2">
+                            <p id="question-prompt" class="text-xs text-indigo-300 mb-2 font-medium">Pilih padanan Bahasa Arab yang betul:</p>
+                            <h3 id="question-title" class="text-2xl md:text-3xl font-bold text-white mb-3">الصَّبَاحِ (Waktu Pagi)</h3>
+                            <div id="question-extra" class="arabic-text text-3xl md:text-4xl text-amber-400 font-bold hidden">أَتَنَاوَلُ الْفُطُورَ فِي الصَّبَاحِ</div>
+                        </div>
+                    </div>
+
+                    <!-- Answer Choices (Arabic Only) -->
+                    <div id="choices-container" class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div id="screen-end" class="hidden flex flex-col items-center text-center space-y-6 py-6">
+                <div id="end-icon" class="text-7xl animate-bounce">🏆</div>
+                <div class="space-y-2">
+                    <h2 id="end-title" class="text-2xl md:text-3xl font-extrabold text-amber-300">Tahniah! Misi Berjaya!</h2>
+                    <p id="end-desc" class="text-sm text-indigo-200 max-w-md mx-auto">
+                        Anda telah melepasi ketiga-tiga stesen cabaran Al-Waqtu Kazzahab dengan cemerlang!
+                    </p>
+                </div>
+                <div class="bg-indigo-950/60 p-5 rounded-2xl border border-indigo-800 w-full max-w-sm space-y-3">
+                    <div class="flex justify-between items-center text-sm font-bold border-b border-indigo-900 pb-2">
+                        <span class="text-indigo-300">Nama Wira:</span>
+                        <span id="summary-name" class="text-amber-300">Salwa</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm font-bold border-b border-indigo-900 pb-2">
+                        <span class="text-indigo-300">Jumlah XP Dikumpul:</span>
+                        <span id="summary-xp" class="text-amber-400">300 XP</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm font-bold">
+                        <span class="text-indigo-300">Baki HP Akhir:</span>
+                        <span id="summary-hp" class="text-red-400">100/100</span>
+                    </div>
+                </div>
+                <button onclick="resetGame()" class="px-8 py-3.5 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-extrabold rounded-xl shadow-lg transform active:scale-95 transition text-base">
+                    MAIN SEMULA 🔄
+                </button>
+            </div>
+
+        </main>
+
+        <!-- FOOTER / CREDIT -->
+        <footer class="bg-indigo-950/90 py-2.5 px-4 text-center border-t border-indigo-900/50 text-[11px] text-indigo-400">
+            Modul Pembelajaran Interaktif Bahasa Arab Tahun 3 • Al-Waqtu Kazzahab
+        </footer>
+    </div>
+
+    <div id="reward-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-gradient-to-b from-indigo-900 to-slate-900 border-2 border-amber-400/80 rounded-3xl p-6 max-w-sm w-full text-center shadow-2xl animate-float space-y-4">
+            <div id="modal-badge-icon" class="text-6xl">🌟</div>
+            <div class="space-y-1">
+                <h3 id="modal-title" class="text-xl font-extrabold text-amber-300">Stesen 1 Selesai!</h3>
+                <p id="modal-desc" class="text-xs text-indigo-200">Anda berjaya menguasai Kosa Kata Waktu Makan!</p>
+            </div>
+            <div class="bg-slate-950/60 p-3 rounded-xl border border-indigo-800 text-xs text-amber-200 font-semibold">
+                +100 XP Diperolehi & HP Dipulihkan!
+            </div>
+            <button onclick="closeModalAndProceed()" class="w-full py-3 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold rounded-xl shadow-lg transition">
+                TERUSKAN PENGEMBARAAN ➔
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Game State Variables
+        let heroData = {
+            name: "Salwa",
+            avatar: "🧝‍♀️",
+            hp: 100,
+            maxHp: 100,
+            xp: 0
+        };
+
+        let currentStation = 1; // 1: Kosa Kata, 2: Susun/Lengkapkan Ayat, 3: Kuiz Pemahaman
+        let currentQuestionIndex = 0;
+
+        // Challenge Questions Dataset for Year 3 Arabic (Al-Waqtu Kazzahab & Meals)
+        // STRICT RULE: Choices contain ONLY Arabic terms/sentences with NO Malay translations in options.
+        const stationsData = {
+            1: {
+                title: "Stesen 1: Kosa Kata Makanan & Waktu",
+                questions: [
+                    {
+                        prompt: "Pilih kosa kata Bahasa Arab untuk SARAPAN:",
+                        title: "Sarapan Pagi",
+                        correct: "الفَطُور",
+                        choices: ["الغَدَاء", "الفَطُور", "العَشَاء", "الصَّبَاحِ"]
+                    },
+                    {
+                        prompt: "Pilih kosa kata Bahasa Arab untuk MAKAN TENGAH HARI:",
+                        title: "Makan Tengah Hari",
+                        correct: "الغَدَاء",
+                        choices: ["الفَطُور", "العَشَاء", "الغَدَاء", "الظُّهْرِ"]
+                    },
+                    {
+                        prompt: "Pilih kosa kata Bahasa Arab untuk MAKAN MALAM:",
+                        title: "Makan Malam",
+                        correct: "العَشَاء",
+                        choices: ["الغَدَاء", "المَسَاءِ", "الفَطُور", "العَشَاء"]
+                    }
+                ],
+                badge: "🏅 Lencana Pakar Kosa Kata",
+                badgeDesc: "Tahniah! Anda berjaya mengenal pasti kosa kata makanan dengan cemerlang."
+            },
+            2: {
+                title: "Stesen 2: Melengkapkan Ayat Waktu",
+                questions: [
+                    {
+                        prompt: "Lengkapkan ayat sarapan pagi:",
+                        title: "أَتَنَاوَلُ الْفُطُورَ فِي ...",
+                        correct: "الصَّبَاحِ",
+                        choices: ["الظُّهْرِ", "الصَّبَاحِ", "المَسَاءِ", "الغَدَاء"]
+                    },
+                    {
+                        prompt: "Lengkapkan ayat makan tengah hari:",
+                        title: "أَتَنَاوَلُ الْغَدَاءَ فِي ...",
+                        correct: "الظُّهْرِ",
+                        choices: ["الصَّبَاحِ", "العَشَاء", "الظُّهْرِ", "المَسَاءِ"]
+                    },
+                    {
+                        prompt: "Lengkapkan ayat makan malam:",
+                        title: "أَتَنَاوَلُ الْعَشَاءَ فِي ...",
+                        correct: "المَسَاءِ",
+                        choices: ["الصَّبَاحِ", "الظُّهْرِ", "المَسَاءِ", "الفَطُور"]
+                    }
+                ],
+                badge: "🥈 Lencana Ahli Susun Ayat",
+                badgeDesc: "Hebat! Anda menguasai struktur ayat harian Bahasa Arab Tahun 3."
+            },
+            3: {
+                title: "Stesen 3: Cabaran Akhir Pemahaman",
+                questions: [
+                    {
+                        prompt: "Pilih ayat lengkap makan sarapan pagi yang betul:",
+                        title: "Pilih Ayat Lengkap Sarapan",
+                        correct: "أَتَنَاوَلُ الْفُطُورَ فِي الصَّبَاحِ",
+                        choices: [
+                            "أَتَنَاوَلُ الْغَدَاءَ فِي الصَّبَاحِ",
+                            "أَتَنَاوَلُ الْفُطُورَ فِي الصَّبَاحِ",
+                            "أَتَنَاوَلُ الْعَشَاءَ فِي الصَّبَاحِ",
+                            "أَتَنَاوَلُ الْفُطُورَ فِي الظُّهْرِ"
+                        ]
+                    },
+                    {
+                        prompt: "Pilih ayat lengkap makan tengah hari yang betul:",
+                        title: "Pilih Ayat Lengkap Tengah Hari",
+                        correct: "أَتَنَاوَلُ الْغَدَاءَ فِي الظُّهْرِ",
+                        choices: [
+                            "أَتَنَاوَلُ الْفُطُورَ فِي الظُّهْرِ",
+                            "أَتَنَاوَلُ الْعَشَاءَ فِي الظُّهْرِ",
+                            "أَتَنَاوَلُ الْغَدَاءَ فِي الظُّهْرِ",
+                            "أَتَنَاوَلُ الْغَدَاءَ فِي المَسَاءِ"
+                        ]
+                    },
+                    {
+                        prompt: "Pilih ayat lengkap makan malam yang betul:",
+                        title: "Pilih Ayat Lengkap Malam",
+                        correct: "أَتَنَاوَلُ الْعَشَاءَ فِي الْمَسَاءِ",
+                        choices: [
+                            "أَتَنَاوَلُ الْفُطُورَ فِي الْمَسَاءِ",
+                            "أَتَنَاوَلُ الْغَدَاءَ فِي الْمَسَاءِ",
+                            "أَتَنَاوَلُ الْعَشَاءَ فِي الْمَسَاءِ",
+                            "أَتَنَاوَلُ الْعَشَاءَ فِي الظُّهْرِ"
+                        ]
+                    }
+                ],
+                badge: "👑 Lencana Wira Waktu Emas (Juara)",
+                badgeDesc: "Luar Biasa! Anda telah menamatkan semua misi Al-Waqtu Kazzahab!"
+            }
+        };
+
+        function selectAvatar(emoji, name) {
+            heroData.avatar = emoji;
+            heroData.name = name;
+            
+            // Highlight selected avatar button
+            const buttons = document.querySelectorAll('.avatar-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('border-amber-400', 'ring-2', 'ring-amber-400');
+                btn.classList.add('border-indigo-600');
+                if(btn.textContent.includes(emoji)) {
+                    btn.classList.add('border-amber-400', 'ring-2', 'ring-amber-400');
+                    btn.classList.remove('border-indigo-600');
+                }
+            });
+
+            const nameInput = document.getElementById('hero-name');
+            nameInput.value = name.replace('Wira ', '');
+        }
+
+        function startGame() {
+            const nameInput = document.getElementById('hero-name').value.trim();
+            if(nameInput) {
+                heroData.name = nameInput;
+            }
+
+            // Reset stats
+            heroData.hp = 100;
+            heroData.xp = 0;
+            currentStation = 1;
+            currentQuestionIndex = 0;
+
+            // Update UI elements
+            document.getElementById('display-hero-name').textContent = heroData.name;
+            document.getElementById('current-avatar').textContent = heroData.avatar;
+            document.getElementById('stats-container').classList.remove('hidden');
+
+            // Switch screens
+            document.getElementById('screen-start').classList.add('hidden');
+            document.getElementById('screen-end').classList.add('hidden');
+            document.getElementById('screen-game').classList.remove('hidden');
+
+            updateStatsDisplay();
+            loadQuestion();
+        }
+
+        function updateStatsDisplay() {
+            document.getElementById('hp-text').textContent = `${heroData.hp}/${heroData.maxHp}`;
+            document.getElementById('hp-fill').style.width = `${heroData.hp}%`;
+            
+            document.getElementById('xp-text').textContent = heroData.xp;
+            // Max XP estimated at 900 for full completion
+            let xpPercent = Math.min((heroData.xp / 900) * 100, 100);
+            document.getElementById('xp-fill').style.width = `${xpPercent}%`;
+        }
+
+        function loadQuestion() {
+            const station = stationsData[currentStation];
+            const q = station.questions[currentQuestionIndex];
+
+            document.getElementById('station-badge-title').textContent = station.title;
+            document.getElementById('station-indicator').textContent = `Stesen ${currentStation}`;
+            document.getElementById('question-counter').textContent = `Soalan ${currentQuestionIndex + 1} / ${station.questions.length}`;
+            document.getElementById('question-prompt').textContent = q.prompt;
+            document.getElementById('question-title').textContent = q.title;
+
+            const choicesContainer = document.getElementById('choices-container');
+            choicesContainer.innerHTML = '';
+
+            // Shuffle choices slightly for variety
+            let shuffledChoices = [...q.choices].sort(() => Math.random() - 0.5);
+
+            shuffledChoices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = "arabic-text py-3.5 px-4 bg-indigo-900/60 hover:bg-indigo-800 border-2 border-indigo-600/70 hover:border-amber-400 text-white text-xl md:text-2xl font-bold rounded-xl shadow-md transition transform active:scale-95 flex items-center justify-center text-center cursor-pointer";
+                btn.textContent = choice;
+                btn.onclick = () => handleAnswer(choice, q.correct);
+                choicesContainer.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(selected, correct) {
+            const buttons = document.querySelectorAll('#choices-container button');
+            buttons.forEach(b => b.disabled = true); // Disable buttons during evaluation
+
+            if(selected === correct) {
+                // Correct Answer
+                heroData.xp += 100;
+                heroData.hp = Math.min(heroData.maxHp, heroData.hp + 10); // Heal HP
+                
+                // Highlight correct button
+                buttons.forEach(b => {
+                    if(b.textContent === correct) {
+                        b.classList.remove('bg-indigo-900/60', 'border-indigo-600/70');
+                        b.classList.add('bg-emerald-600', 'border-emerald-400');
+                    }
+                });
+
+                setTimeout(() => {
+                    nextStep();
+                }, 1000);
+            } else {
+                // Wrong Answer
+                heroData.hp = Math.max(0, heroData.hp - 20); // Lose HP
+
+                // Highlight selected wrong and correct
+                buttons.forEach(b => {
+                    if(b.textContent === selected) {
+                        b.classList.remove('bg-indigo-900/60', 'border-indigo-600/70');
+                        b.classList.add('bg-rose-600', 'border-rose-400');
+                    }
+                    if(b.textContent === correct) {
+                        b.classList.add('bg-emerald-600/60', 'border-emerald-400');
+                    }
+                });
+
+                if(heroData.hp <= 0) {
+                    setTimeout(() => {
+                        triggerGameOver();
+                    }, 1200);
+                    return;
+                }
+
+                setTimeout(() => {
+                    nextStep();
+                }, 1200);
+            }
+
+            updateStatsDisplay();
+        }
+
+        function nextStep() {
+            currentQuestionIndex++;
+            const station = stationsData[currentStation];
+
+            if(currentQuestionIndex >= station.questions.length) {
+                // Station Completed, Show Modal
+                showStationRewardModal();
+            } else {
+                loadQuestion();
+            }
+        }
+
+        function showStationRewardModal() {
+            const modal = document.getElementById('reward-modal');
+            const station = stationsData[currentStation];
+
+            document.getElementById('modal-title').textContent = `Stesen ${currentStation} Selesai!`;
+            document.getElementById('modal-desc').textContent = station.badgeDesc;
+            document.getElementById('modal-badge-icon').textContent = currentStation === 3 ? '👑' : (currentStation === 2 ? '🥈' : '🏅');
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModalAndProceed() {
+            const modal = document.getElementById('reward-modal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+
+            currentStation++;
+            currentQuestionIndex = 0;
+
+            if(currentStation > 3) {
+                triggerVictory();
+            } else {
+                loadQuestion();
+            }
+        }
+
+        function triggerVictory() {
+            document.getElementById('screen-game').classList.add('hidden');
+            document.getElementById('screen-end').classList.remove('hidden');
+
+            document.getElementById('end-icon').textContent = '🏆';
+            document.getElementById('end-title').textContent = 'Tahniah! Misi Sempurna!';
+            document.getElementById('end-desc').textContent = 'Anda berjaya menamatkan kesemua 3 stesen cabaran Al-Waqtu Kazzahab dengan cemerlang!';
+            
+            document.getElementById('summary-name').textContent = heroData.name;
+            document.getElementById('summary-xp').textContent = `${heroData.xp} XP`;
+            document.getElementById('summary-hp').textContent = `${heroData.hp}/${heroData.maxHp}`;
+        }
+
+        function triggerGameOver() {
+            document.getElementById('screen-game').classList.add('hidden');
+            document.getElementById('screen-end').classList.remove('hidden');
+
+            document.getElementById('end-icon').textContent = '💀';
+            document.getElementById('end-title').textContent = 'Wira Kehabisan HP!';
+            document.getElementById('end-desc').textContent = 'Jangan putus asa! Cuba lagi untuk menguasai Bahasa Arab Tahun 3.';
+            
+            document.getElementById('summary-name').textContent = heroData.name;
+            document.getElementById('summary-xp').textContent = `${heroData.xp} XP`;
+            document.getElementById('summary-hp').textContent = `0/${heroData.maxHp}`;
+        }
+
+        function resetGame() {
+            document.getElementById('screen-end').classList.add('hidden');
+            document.getElementById('screen-start').classList.remove('hidden');
+            document.getElementById('stats-container').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
